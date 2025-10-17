@@ -1,0 +1,204 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'CloudWatch Dashboard for RAG Evaluation Pipeline'
+
+Parameters:
+  DashboardName:
+    Type: String
+    Default: 'RAG-Evaluation-Pipeline'
+    Description: 'Name of the CloudWatch dashboard'
+  
+  Namespace:
+    Type: String
+    Default: 'RAGEvaluation'
+    Description: 'CloudWatch namespace for metrics'
+  
+  LogGroupName:
+    Type: String
+    Default: '/aws/rag-evaluation'
+    Description: 'CloudWatch log group name'
+
+Resources:
+  # CloudWatch Dashboard
+  RAGEvaluationDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: !Ref DashboardName
+      DashboardBody: !Sub |
+        {
+          "widgets": [
+            {
+              "type": "metric",
+              "x": 0,
+              "y": 0,
+              "width": 12,
+              "height": 6,
+              "properties": {
+                "metrics": [
+                  [ "${Namespace}", "retrieval_duration", { "stat": "Average" } ],
+                  [ "${Namespace}", "retrieval_success", { "stat": "Sum" } ],
+                  [ "${Namespace}", "retrieval_failure", { "stat": "Sum" } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "${AWS::Region}",
+                "title": "Retrieval Agent Metrics",
+                "period": 300,
+                "yAxis": {
+                  "left": {
+                    "min": 0
+                  }
+                }
+              }
+            },
+            {
+              "type": "metric",
+              "x": 12,
+              "y": 0,
+              "width": 12,
+              "height": 6,
+              "properties": {
+                "metrics": [
+                  [ "${Namespace}", "dev_latency", { "stat": "Average" } ],
+                  [ "${Namespace}", "token_usage_total", { "stat": "Sum" } ],
+                  [ "${Namespace}", "dev_success", { "stat": "Sum" } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "${AWS::Region}",
+                "title": "Dev Agent Metrics",
+                "period": 300,
+                "yAxis": {
+                  "left": {
+                    "min": 0
+                  }
+                }
+              }
+            },
+            {
+              "type": "metric",
+              "x": 0,
+              "y": 6,
+              "width": 24,
+              "height": 6,
+              "properties": {
+                "metrics": [
+                  [ "${Namespace}", "evaluation_ragas_faithfulness", { "stat": "Average" } ],
+                  [ "${Namespace}", "evaluation_ragas_relevance", { "stat": "Average" } ],
+                  [ "${Namespace}", "evaluation_ragas_correctness", { "stat": "Average" } ],
+                  [ "${Namespace}", "evaluation_llm_overall_score", { "stat": "Average" } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "${AWS::Region}",
+                "title": "Evaluation Metrics",
+                "period": 300,
+                "yAxis": {
+                  "left": {
+                    "min": 0,
+                    "max": 1
+                  }
+                }
+              }
+            },
+            {
+              "type": "metric",
+              "x": 0,
+              "y": 12,
+              "width": 24,
+              "height": 6,
+              "properties": {
+                "metrics": [
+                  [ "${Namespace}", "pipeline_success", { "stat": "Sum" } ],
+                  [ "${Namespace}", "pipeline_failure", { "stat": "Sum" } ],
+                  [ "${Namespace}", "pipeline_duration", { "stat": "Average" } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "${AWS::Region}",
+                "title": "Pipeline Overview",
+                "period": 300,
+                "yAxis": {
+                  "left": {
+                    "min": 0
+                  }
+                }
+              }
+            },
+            {
+              "type": "log",
+              "x": 0,
+              "y": 18,
+              "width": 24,
+              "height": 6,
+              "properties": {
+                "query": "SOURCE '${LogGroupName}'\n| fields @timestamp, @message\n| filter @message like /ERROR/\n| sort @timestamp desc\n| limit 100",
+                "region": "${AWS::Region}",
+                "title": "Recent Errors",
+                "view": "table"
+              }
+            }
+          ]
+        }
+
+  # CloudWatch Log Group
+  RAGEvaluationLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Ref LogGroupName
+      RetentionInDays: 30
+
+  # CloudWatch Alarms
+  PipelineFailureAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub '${DashboardName}-Pipeline-Failures'
+      AlarmDescription: 'Alert when pipeline failures exceed threshold'
+      MetricName: pipeline_failure
+      Namespace: !Ref Namespace
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      AlarmActions:
+        - !Ref SNSTopicArn
+
+  EvaluationScoreAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub '${DashboardName}-Low-Evaluation-Scores'
+      AlarmDescription: 'Alert when evaluation scores drop below threshold'
+      MetricName: evaluation_ragas_faithfulness
+      Namespace: !Ref Namespace
+      Statistic: Average
+      Period: 900
+      EvaluationPeriods: 3
+      Threshold: 0.7
+      ComparisonOperator: LessThanThreshold
+      AlarmActions:
+        - !Ref SNSTopicArn
+
+  # SNS Topic for Alerts (Optional)
+  SNSTopicArn:
+    Type: String
+    Default: ''
+    Description: 'SNS Topic ARN for alarm notifications (optional)'
+
+Outputs:
+  DashboardURL:
+    Description: 'URL of the CloudWatch Dashboard'
+    Value: !Sub 'https://${AWS::Region}.console.aws.amazon.com/cloudwatch/home?region=${AWS::Region}#dashboards:name=${DashboardName}'
+    Export:
+      Name: !Sub '${AWS::StackName}-Dashboard-URL'
+  
+  LogGroupArn:
+    Description: 'ARN of the CloudWatch Log Group'
+    Value: !GetAtt RAGEvaluationLogGroup.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-LogGroup-ARN'
+  
+  DashboardName:
+    Description: 'Name of the created dashboard'
+    Value: !Ref DashboardName
+    Export:
+      Name: !Sub '${AWS::StackName}-Dashboard-Name'

@@ -1,0 +1,78 @@
+# Multi-Agent RAG Evaluation Pipeline Configuration
+
+# AWS Configuration
+aws:
+  region: "us-east-1"
+  cloudwatch:
+    namespace: "RAGEvaluation"
+    log_group: "/aws/rag-evaluation"
+    
+# AgentCore Configuration
+agentcore:
+  enabled: true
+  base_url: "http://localhost:8000"  # Default AgentCore service URL
+  bill:
+    agent_name: "bill"
+    timeout: 60
+    max_retries: 3
+    health_check_interval: 30
+
+# Bedrock Configuration (for LLM-as-a-Judge evaluation only)
+bedrock:
+  region: "us-east-1"
+  models:
+    judge: "anthropic.claude-3-sonnet-20240229-v1:0"
+  max_tokens: 4096
+  temperature: 0.1
+
+# S3 Configuration
+s3:
+  bucket: "rag-evaluation-datasets"
+  key_prefix: "test-data/"
+  supported_formats: ["json", "txt"]
+
+# Evaluation Configuration
+evaluation:
+  ragas:
+    enabled: true
+    metrics: ["faithfulness", "relevance", "correctness", "context_precision"]
+  llm_judge:
+    enabled: true
+    model: "anthropic.claude-3-sonnet-20240229-v1:0"
+    temperature: 0.0
+    max_tokens: 1024
+  
+  thresholds:
+    faithfulness: 0.8
+    relevance: 0.8
+    correctness: 0.8
+    overall: 0.8
+
+# Agent Configuration
+agents:
+  retrieval:
+    timeout: 30
+    max_retries: 3
+    batch_size: 10
+    
+  dev:
+    timeout: 60
+    max_retries: 3
+    context_window: 8000
+    
+  evaluator:
+    timeout: 45
+    max_retries: 2
+
+# Pipeline Configuration
+pipeline:
+  session_id_prefix: "rag-eval"
+  enable_retries: true
+  max_pipeline_retries: 2
+  parallel_evaluation: true
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "json"
+  include_trace_id: true

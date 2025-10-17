@@ -1,0 +1,27 @@
+[
+  {
+    "title": "Introduction to Machine Learning",
+    "content": "Machine learning is a subset of artificial intelligence that focuses on the development of algorithms and statistical models that enable computer systems to improve their performance on a specific task through experience. It involves training models on data to make predictions or decisions without being explicitly programmed for every scenario.",
+    "topics": ["machine learning", "artificial intelligence", "algorithms", "statistical models"]
+  },
+  {
+    "title": "Natural Language Processing",
+    "content": "Natural Language Processing (NLP) is a branch of artificial intelligence that helps computers understand, interpret and manipulate human language. It bridges the gap between human communication and computer understanding. NLP techniques are used in various applications such as chatbots, sentiment analysis, machine translation, and text summarization.",
+    "topics": ["natural language processing", "NLP", "text processing", "language understanding"]
+  },
+  {
+    "title": "Retrieval-Augmented Generation",
+    "content": "Retrieval-Augmented Generation (RAG) is a technique that combines the power of large language models with external knowledge retrieval. RAG systems first retrieve relevant documents from a knowledge base, then use that context to generate more accurate and grounded responses. This approach helps reduce hallucination and improves the factual accuracy of generated text.",
+    "topics": ["RAG", "retrieval", "generation", "knowledge base", "context"]
+  },
+  {
+    "title": "Vector Databases and Embeddings",
+    "content": "Vector databases are specialized databases designed to store and query high-dimensional vectors efficiently. They are essential for semantic search and similarity matching in applications like recommendation systems and RAG pipelines. Embeddings are dense vector representations of text that capture semantic meaning, enabling computers to understand the similarity between different pieces of text.",
+    "topics": ["vector databases", "embeddings", "semantic search", "similarity matching"]
+  },
+  {
+    "title": "Evaluation Metrics for AI Systems",
+    "content": "Evaluating AI systems requires careful consideration of multiple metrics including accuracy, precision, recall, F1-score, and domain-specific measures. For language models, additional metrics like BLEU, ROUGE, and human evaluation are commonly used. RAG systems are typically evaluated on faithfulness, relevance, and correctness to ensure they provide accurate and relevant information.",
+    "topics": ["evaluation", "metrics", "accuracy", "precision", "recall", "BLEU", "ROUGE"]
+  }
+]

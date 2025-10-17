@@ -1,0 +1,10 @@
+What is machine learning?
+How does natural language processing work?
+What is RAG and how does it work?
+What are vector databases used for?
+How do you evaluate AI systems?
+What are the benefits of using embeddings?
+How can RAG reduce hallucination?
+What metrics are used to evaluate language models?
+What is semantic search?
+How do recommendation systems use vector databases?
