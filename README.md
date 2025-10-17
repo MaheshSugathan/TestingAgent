@@ -79,13 +79,16 @@ The pipeline consists of three main agents orchestrated by LangGraph:
 3. **Set up environment variables**:
    ```bash
    cp env.example .env
-   # Edit .env with your AWS credentials and configuration
+   # Edit .env with your configuration
    ```
 
-4. **Configure AWS credentials**:
+4. **Test the Bill Agent**:
    ```bash
-   aws configure
-   # Or set environment variables in .env
+   # Start the Bill Agent
+   python test_bill_agent.py
+   
+   # In another terminal, test the pipeline
+   python test_rag_pipeline.py
    ```
 
 ## ⚙️ Configuration

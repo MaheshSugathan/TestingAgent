@@ -1,0 +1,126 @@
+# AgentCore Configuration for RAG Evaluation Agents
+# This configuration defines how agents should be deployed to AgentCore
+
+agents:
+  retrieval-agent:
+    name: "retrieval-agent"
+    description: "Retrieval agent for RAG evaluation pipeline"
+    version: "1.0.0"
+    entry_point: "retrieval_agent.py"
+    dependencies:
+      - "boto3"
+      - "botocore"
+    environment:
+      AWS_REGION: "us-east-1"
+      S3_BUCKET_NAME: "rag-evaluation-documents"
+    resources:
+      memory: "512Mi"
+      cpu: "250m"
+    health_check:
+      endpoint: "/health"
+      interval: 30
+    scaling:
+      min_instances: 1
+      max_instances: 3
+    config:
+      max_documents: 5
+      timeout: 30
+
+  evaluator-agent:
+    name: "evaluator-agent"
+    description: "Evaluator agent for RAG evaluation pipeline"
+    version: "1.0.0"
+    entry_point: "evaluator_agent.py"
+    dependencies:
+      - "pydantic"
+      - "requests"
+    environment:
+      EVALUATION_TYPE: "llm_judge"
+    resources:
+      memory: "256Mi"
+      cpu: "200m"
+    health_check:
+      endpoint: "/health"
+      interval: 30
+    scaling:
+      min_instances: 1
+      max_instances: 2
+    config:
+      evaluation_type: "llm_judge"
+      timeout: 45
+
+  dev-agent:
+    name: "dev-agent"
+    description: "Dev agent for RAG evaluation pipeline (Bill integration)"
+    version: "1.0.0"
+    entry_point: "dev_agent.py"
+    dependencies:
+      - "requests"
+      - "pydantic"
+    environment:
+      AGENTCORE_BASE_URL: "http://localhost:8000"
+      BILL_AGENT_NAME: "bill"
+    resources:
+      memory: "256Mi"
+      cpu: "200m"
+    health_check:
+      endpoint: "/health"
+      interval: 30
+    scaling:
+      min_instances: 1
+      max_instances: 2
+    config:
+      timeout: 60
+      max_retries: 3
+
+# AgentCore service configuration
+service:
+  name: "rag-evaluation-agents"
+  version: "1.0.0"
+  description: "RAG evaluation pipeline agents for AgentCore"
+  namespace: "rag-evaluation"
+  
+  # Service endpoints
+  endpoints:
+    base_url: "http://localhost:8000"
+    health: "/health"
+    agents: "/agents"
+    invoke: "/agents/{agent_name}/invoke"
+    info: "/agents/{agent_name}/info"
+    health_check: "/agents/{agent_name}/health"
+
+  # Service configuration
+  config:
+    timeout: 60
+    max_retries: 3
+    log_level: "INFO"
+    enable_metrics: true
+    enable_tracing: true
+
+# Deployment configuration
+deployment:
+  environment: "development"
+  replicas: 1
+  image_registry: "localhost:5000"
+  image_tag: "latest"
+  
+  # Resource limits
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "1000m"
+  
+  # Networking
+  networking:
+    port: 8000
+    protocol: "http"
+    cors_enabled: true
+    
+  # Monitoring
+  monitoring:
+    enabled: true
+    metrics_port: 9090
+    health_check_interval: 30

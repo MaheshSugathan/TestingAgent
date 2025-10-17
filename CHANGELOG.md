@@ -24,6 +24,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed BedrockDevAgent to focus on AgentCore integration
 - Updated configuration to prioritize AgentCore over Bedrock
 - Streamlined CLI options by removing agent-type selection
+- Removed Docker deployment complexity for simpler local testing
+
+### Removed
+- Docker deployment setup and configuration files
+- Docker Compose and related scripts
+- Docker-specific documentation
+- Complex dependency requirements
 
 ### Features
 - **RetrievalAgent**: Load test datasets from S3 bucket with JSON/TXT support
