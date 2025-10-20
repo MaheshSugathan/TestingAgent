@@ -56,13 +56,13 @@ class DevAgent(BaseAgent):
         session_id = state.session_id
         
         try:
-                    self.log_with_context(
-                        "info",
-                        "Starting Bill dev agent execution",
-                        session_id=session_id,
-                        agentcore_url=self.agentcore_base_url,
-                        bill_agent=self.bill_agent_name
-                    )
+            self.log_with_context(
+                "info",
+                "Starting Bill dev agent execution",
+                session_id=session_id,
+                agentcore_url=self.agentcore_base_url,
+                bill_agent=self.bill_agent_name
+            )
             
             # Get documents from state
             documents = state.data.get('documents', [])
@@ -75,7 +75,7 @@ class DevAgent(BaseAgent):
             # Generate responses using Bill agent
             responses = []
             for query in queries:
-                        response = await self._generate_response_with_bill(
+                response = await self._generate_response_with_bill(
                     query, documents, session_id
                 )
                 responses.append({
@@ -87,14 +87,14 @@ class DevAgent(BaseAgent):
             
             # Update state
             state.data['generated_responses'] = responses
-                    state.data['dev_metadata'] = {
-                        'agent_type': 'bill',
-                        'agentcore_url': self.agentcore_base_url,
-                        'bill_agent': self.bill_agent_name,
-                        'query_count': len(queries),
-                        'response_count': len(responses),
-                        'execution_time': time.time() - start_time
-                    }
+            state.data['dev_metadata'] = {
+                'agent_type': 'bill',
+                'agentcore_url': self.agentcore_base_url,
+                'bill_agent': self.bill_agent_name,
+                'query_count': len(queries),
+                'response_count': len(responses),
+                'execution_time': time.time() - start_time
+            }
             
             # Record metrics
             duration = time.time() - start_time
@@ -161,7 +161,7 @@ class DevAgent(BaseAgent):
             )
             
             # Send request to Bill agent
-            agent_response = await self.askbill_interface.send_request(request)
+            agent_response = await self.bill_interface.send_request(request)
             
             if agent_response.error:
                 raise Exception(f"Bill agent error: {agent_response.error}")
@@ -171,22 +171,22 @@ class DevAgent(BaseAgent):
             
             # Record metrics
             self.record_agent_metric(
-                metric_name="askbill_response_latency",
+                metric_name="bill_response_latency",
                 value=response_time,
                 unit="Seconds",
                 session_id=session_id,
-                agent_name=self.askbill_agent_name
+                agent_name=self.bill_agent_name
             )
             
             # Record token usage if available
             if agent_response.tokens_used:
                 for token_type, count in agent_response.tokens_used.items():
                     self.record_agent_metric(
-                        metric_name=f"askbill_tokens_{token_type}",
+                        metric_name=f"bill_tokens_{token_type}",
                         value=count,
                         unit="Count",
                         session_id=session_id,
-                        agent_name=self.askbill_agent_name
+                        agent_name=self.bill_agent_name
                     )
             
             return {
@@ -197,7 +197,7 @@ class DevAgent(BaseAgent):
                     "confidence": agent_response.confidence,
                     "agent_response_time": agent_response.execution_time,
                     "tokens_used": agent_response.tokens_used,
-                    "agent_name": self.askbill_agent_name,
+                    "agent_name": self.bill_agent_name,
                     "agentcore_url": self.agentcore_base_url,
                     "agent_metadata": agent_response.metadata
                 }
@@ -258,7 +258,7 @@ class DevAgent(BaseAgent):
         Returns:
             Conversation response
         """
-                        response = await self._generate_response_with_bill(query, documents, session_id)
+        response = await self._generate_response_with_bill(query, documents, session_id)
         
         return {
             "type": "single_turn",
@@ -286,7 +286,7 @@ class DevAgent(BaseAgent):
         """
         responses = []
         for i, query in enumerate(queries):
-                        response = await self._generate_response_with_bill(query, documents, session_id)
+            response = await self._generate_response_with_bill(query, documents, session_id)
             responses.append({
                 "type": "multi_turn",
                 "turn": i + 1,
@@ -305,7 +305,7 @@ class DevAgent(BaseAgent):
             True if agent is healthy, False otherwise
         """
         try:
-            return await self.askbill_interface.health_check()
+            return await self.bill_interface.health_check()
         except Exception as e:
             self.logger.error(f"Health check failed: {e}")
             return False
@@ -317,6 +317,6 @@ class DevAgent(BaseAgent):
             Agent information dictionary
         """
         try:
-            return await self.askbill_interface.get_agent_info()
+            return await self.bill_interface.get_agent_info()
         except Exception as e:
             return {"error": str(e)}
