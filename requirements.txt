@@ -1,3 +1,19 @@
+# Core RAG Pipeline Dependencies
+langchain-core>=0.1.0
+langchain-community>=0.0.20
+langchain-aws>=0.0.20
+langgraph>=0.0.40
+
+# AWS Dependencies
+boto3>=1.34.0
+botocore>=1.34.0
+
+# RAG Evaluation Dependencies
+ragas>=0.1.0
+
+# Observability Dependencies
+watchtower>=3.0.0
+
 # Core dependencies for Bill Agent testing
 fastapi>=0.104.0
 uvicorn[standard]>=0.24.0

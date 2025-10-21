@@ -122,9 +122,9 @@ async def dev_node(state: PipelineState) -> PipelineState:
         agent = DevAgent(
             config=state.config.get("agents", {}).get("dev", {}),
             agentcore_base_url=agentcore_config.get("base_url", "http://localhost:8000"),
-            askbill_agent_name=agentcore_config.get("askbill", {}).get("agent_name", "askbill"),
-            timeout=agentcore_config.get("askbill", {}).get("timeout", 60),
-            max_retries=agentcore_config.get("askbill", {}).get("max_retries", 3)
+            bill_agent_name=agentcore_config.get("bill", {}).get("agent_name", "bill"),
+            timeout=agentcore_config.get("bill", {}).get("timeout", 60),
+            max_retries=agentcore_config.get("bill", {}).get("max_retries", 3)
         )
         
         # Create agent state
