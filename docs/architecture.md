@@ -11,7 +11,7 @@ The RAG Evaluation Pipeline is a multi-agent system that orchestrates document r
 │                    RAG Evaluation Pipeline                      │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐         │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐          │
 │  │ Retrieval   │    │   Dev       │    │ Evaluator   │         │
 │  │   Agent     │───▶│   Agent     │───▶│   Agent     │         │
 │  │             │    │             │    │             │         │
@@ -36,7 +36,7 @@ The RAG Evaluation Pipeline is a multi-agent system that orchestrates document r
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐            │
 │  │     S3      │  │ AgentCore   │  │ CloudWatch  │            │
 │  │             │  │             │  │             │            │
-│  │ • Datasets  │  │ • Bill   │  │ • Metrics   │            │
+│  │ • Datasets  │  │ • Bill      │  │ • Metrics   │            │
 │  │ • Documents │  │ • Agent     │  │ • Logs      │            │
 │  │ • Results   │  │ • HTTP API  │  │ • Dashboard │            │
 │  └─────────────┘  └─────────────┘  └─────────────┘            │

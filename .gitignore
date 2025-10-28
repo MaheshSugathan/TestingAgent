@@ -1,12 +1,8 @@
-# Byte-compiled / optimized / DLL files
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
 *.so
-
-# Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -20,505 +16,66 @@ parts/
 sdist/
 var/
 wheels/
-share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-cover/
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-.pybuilder/
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-#   For a library or package, you might want to ignore these files since the code is
-#   intended to run in multiple environments; otherwise, check them in:
-# .python-version
-
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
-
-# poetry
-#   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
-#poetry.lock
-
-# pdm
-#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
-#pdm.lock
-#   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
-#   in version control.
-#   https://pdm.fming.dev/#use-with-ide
-.pdm.toml
-
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
+# Virtual Environment
 venv/
+env/
 ENV/
-env.bak/
-venv.bak/
+.venv
 
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-# pytype static type analyzer
-.pytype/
-
-# Cython debug symbols
-cython_debug/
-
-# PyCharm
-#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
-#  be added to the global gitignore or merged into this project gitignore.  For a PyCharm
-#  project, it is recommended to use the following:
-#.idea/
-#.idea/*.iml
-#.idea/modules.xml
-#.idea/vcs.xml
-#.idea/workspace.xml
-#.idea/tasks.xml
-#.idea/gradle.xml
-#.idea/assetWizardSettings.xml
-#.idea/dictionaries
-#.idea/shelf
-
-# VS Code
+# IDE
 .vscode/
-*.code-workspace
-
-# Local History for Visual Studio Code
-.history/
-
-# Built Visual Studio Code Extensions
-*.vsix
-
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Icon must end with two \r
-Icon
-
-# Thumbnails
-._*
-
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-# Windows
-Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-ehthumbs_vista.db
-
-# Dump file
-*.stackdump
-
-# Folder config file
-[Dd]esktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msix
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-
-# Linux
+.idea/
+*.swp
+*.swo
 *~
 
-# temporary files which can be created if a process still has a handle open of a deleted file
-.fuse_hidden*
+# AWS
+.aws/
+*.pem
 
-# KDE directory preferences
-.directory
-
-# Linux trash folder which might appear on any partition or disk
-.Trash-*
-
-# .nfs files are created when an open file is removed but is still being accessed
-.nfs*
-
-# Project-specific ignores
-# Configuration files with secrets
+# Environment
 .env
 .env.local
-.env.production
-.env.staging
-config/secrets.yaml
-config/production.yaml
-config/staging.yaml
-
-# AWS credentials
-.aws/
-aws-credentials.json
+.env.*.local
 
 # Logs
 logs/
 *.log
 
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# Coverage directory used by tools like istanbul
-coverage/
-*.lcov
-
-# nyc test coverage
-.nyc_output
-
-# Dependency directories
-node_modules/
-
-# Optional npm cache directory
-.npm
-
-# Optional eslint cache
-.eslintcache
-
-# Microbundle cache
-.rpt2_cache/
-.rts2_cache_cjs/
-.rts2_cache_es/
-.rts2_cache_umd/
-
-# Optional REPL history
-.node_repl_history
-
-# Output of 'npm pack'
-*.tgz
-
-# Yarn Integrity file
-.yarn-integrity
-
-# parcel-bundler cache (https://parceljs.org/)
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
 .cache
-.parcel-cache
 
-# Next.js build output
-.next
+# Jupyter
+.ipynb_checkpoints
+*.ipynb
 
-# Nuxt.js build / generate output
-.nuxt
-dist
-
-# Gatsby files
-.cache/
-public
-
-# Storybook build outputs
-.out
-.storybook-out
-
-# Temporary folders
-tmp/
-temp/
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# OS generated files
+# OS
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 
 # Project specific
-# Test results
-test-results/
-test-reports/
-.pytest_cache/
+agentcore_agents/__pycache__/
+agents/__pycache__/
+config/__pycache__/
+evaluation/__pycache__/
+observability/__pycache__/
+orchestration/__pycache__/
 
-# Jupyter notebook checkpoints
-.ipynb_checkpoints/
-
-# IPython
-profile_default/
-ipython_config.py
-
-# Local development
-local/
-dev/
-development/
-
-# Database files
-*.db
-*.sqlite
-*.sqlite3
-
-# Backup files
-*.bak
-*.backup
-*.old
-*.orig
-
-# Compressed files
-*.zip
-*.tar.gz
-*.rar
-
-# IDE files
-*.swp
-*.swo
-*~
-
-# Documentation build
-docs/_build/
-docs/build/
-
-# Sphinx documentation
-docs/_build/
-
-# MkDocs documentation
-/site
-
-# Local configuration overrides
-config/local.yaml
-config/dev.yaml
-
-# Runtime files
-*.pid
-*.sock
-
-# CloudFormation outputs
-cloudformation/outputs.json
-
-# Terraform
-*.tfstate
-*.tfstate.*
-.terraform/
-.terraform.lock.hcl
-
-# Kubernetes
-*.kubeconfig
-
-# Docker
-.dockerignore
-
-# Monitoring and profiling
-*.prof
-*.profile
-
-# Benchmark results
-benchmark_results/
-*.benchmark
-
-# Performance testing
-performance_results/
-*.perf
-
-# Load testing
-load_test_results/
-
-# Security scanning
-security_scan_results/
-*.sarif
-
-# Dependency analysis
-dependency_analysis/
-*.dep
-
-# Code quality
-code_quality/
-*.quality
-
-# Test data (large files)
-test_data/
-large_test_files/
-*.testdata
-
-# Allow sample test data
-!tests/data/sample_*.json
-!tests/data/sample_*.txt
-
-# Model files (if any)
-models/
-*.model
-*.pkl
-*.joblib
-
-# Data files
-data/
-datasets/
+# Output files
+*.json
+!tests/data/*.json
 *.csv
-*.json.gz
-*.parquet
-
-# Cache directories
-.cache/
-cache/
+*.xlsx
 
 # Temporary files
-tmp/
-temp/
-.tmp/
-
-# Build artifacts
-build/
-dist/
-*.egg-info/
-
-# Coverage reports
-htmlcov/
-.coverage
-coverage.xml
-*.cover
-
-# Profiling data
-*.prof
-*.profile
-
-# Jupyter notebook outputs
-*.ipynb
-
-# RAG evaluation specific
-# Evaluation results
-evaluation_results/
-*.evaluation
-
-# Pipeline outputs
-pipeline_outputs/
-*.pipeline
-
-# Agent logs
-agent_logs/
-*.agent.log
-
-# Session data
-sessions/
-*.session
-
-# Metrics data
-metrics/
-*.metrics
-
-# CloudWatch logs (local)
-cloudwatch_logs/
-*.cloudwatch
-
-# S3 sync cache
-.s3_cache/
-
-# Bedrock cache
-.bedrock_cache/
-
-# AgentCore cache
-.agentcore_cache/
+*.tmp
+*.bak
+*.swp
