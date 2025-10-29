@@ -79,3 +79,4 @@ orchestration/__pycache__/
 *.tmp
 *.bak
 *.swp
+docs/
