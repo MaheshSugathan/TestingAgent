@@ -1,4 +1,4 @@
-"""FastAPI server for local RAG evaluation pipeline."""
+"""FastAPI server for local RAGLens pipeline."""
 
 import asyncio
 import os
@@ -49,7 +49,7 @@ async def lifespan(app: FastAPI):
 
     # Startup
     logger = setup_logger("RAGEvaluationAPI")
-    logger.info("Starting RAG Evaluation API Server...")
+    logger.info("Starting RAGLens API Server...")
 
     try:
         # Load configuration
@@ -68,7 +68,7 @@ async def lifespan(app: FastAPI):
             metrics_collector=metrics_collector
         )
 
-        logger.info("RAG Evaluation Pipeline initialized successfully")
+        logger.info("RAGLens pipeline initialized successfully")
     except Exception as e:
         logger.error(f"Failed to initialize pipeline: {e}")
         raise
@@ -76,13 +76,13 @@ async def lifespan(app: FastAPI):
     yield
 
     # Shutdown
-    logger.info("Shutting down RAG Evaluation API Server...")
+    logger.info("Shutting down RAGLens API Server...")
 
 
 # Create FastAPI app
 app = FastAPI(
-    title="RAG Evaluation Pipeline API",
-    description="API for running RAG evaluation pipeline locally",
+    title="RAGLens API",
+    description="API for running the RAGLens pipeline locally",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -100,7 +100,7 @@ app.add_middleware(
 @app.get("/", response_model=HealthResponse)
 async def root():
     """Root endpoint."""
-    return HealthResponse(status="ok", message="RAG Evaluation Pipeline API is running")
+    return HealthResponse(status="ok", message="RAGLens API is running")
 
 
 @app.get("/health", response_model=HealthResponse)

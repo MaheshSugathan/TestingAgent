@@ -1,6 +1,6 @@
-# Deployment Guide - RAG Evaluation Platform
+# Deployment Guide — RAGLens
 
-Complete step-by-step guide for deploying the RAG Evaluation Platform to AWS Bedrock Agent Core Runtime.
+Complete step-by-step guide for deploying RAGLens to AWS Bedrock Agent Core Runtime.
 
 ## 📋 Prerequisites
 
@@ -149,7 +149,7 @@ cat output.json
 ## 📁 Project Structure for Deployment
 
 ```
-TestingAgents/
+TestingAgent/
 ├── agentcore_entry.py          # Entry point for Agent Core Runtime
 ├── Dockerfile.bedrock          # Docker image for Agent Core
 ├── requirements.txt            # Python dependencies

@@ -1,6 +1,6 @@
 # Human-in-the-Loop (HITL) Guide
 
-The Testing Agent supports **two modes** of operation: fully automated and human-in-the-loop. You can run with or without HITL using configuration or per-request parameters.
+RAGLens supports **two modes** of operation: fully automated and human-in-the-loop. You can run with or without HITL using configuration or per-request parameters.
 
 ## Modes
 

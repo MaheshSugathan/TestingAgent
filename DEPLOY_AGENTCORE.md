@@ -61,7 +61,7 @@ async def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     # Initialize pipeline if not already done
     if pipeline is None:
         logger = setup_logger("AgentCoreEntry")
-        logger.info("Initializing RAG Evaluation Pipeline...")
+        logger.info("Initializing RAGLens pipeline...")
         
         config_manager = ConfigManager()
         config = config_manager.load_config()

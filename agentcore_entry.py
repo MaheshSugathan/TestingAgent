@@ -27,7 +27,7 @@ async def lifespan(app: FastAPI):
     
     # Startup: Initialize pipeline
     logger = setup_logger("AgentCoreEntry")
-    logger.info("Initializing RAG Evaluation Pipeline for Agent Core...")
+    logger.info("Initializing RAGLens pipeline for Agent Core...")
     
     try:
         config_manager = ConfigManager()
@@ -73,7 +73,7 @@ async def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     # Initialize pipeline if not already done
     if pipeline is None:
         logger = setup_logger("AgentCoreEntry")
-        logger.info("Initializing RAG Evaluation Pipeline...")
+        logger.info("Initializing RAGLens pipeline...")
         
         try:
             config_manager = ConfigManager()

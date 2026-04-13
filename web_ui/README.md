@@ -1,4 +1,4 @@
-# Agent Core Runtime Web UI
+# RAGLens Chat (Web UI)
 
 A simple web interface to invoke any AWS Bedrock Agent Core Runtime agent and view responses.
 

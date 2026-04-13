@@ -1,13 +1,13 @@
 # Chat App Deployment Guide
 
-Deploy the RAG Evaluation Chat UI to AWS with secure access via Cognito.
+Deploy the RAGLens Chat UI to AWS with secure access via Cognito.
 
 ## Prerequisites
 
 - AWS CLI configured
 - Terraform 1.0+
 - Node.js 18+
-- Agent Core deployed (Testing Agent)
+- Agent Core deployed (RAGLens)
 - Agent HTTP URL or Agent ARN for invocation
 
 ## Step 1: Configure Terraform

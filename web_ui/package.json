@@ -1,7 +1,7 @@
 {
-  "name": "agentcore-web-ui",
+  "name": "raglens-web-ui",
   "version": "1.0.0",
-  "description": "Web UI for invoking AWS Bedrock Agent Core Runtime agents",
+  "description": "RAGLens — web UI for Bedrock Agent Core agents",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

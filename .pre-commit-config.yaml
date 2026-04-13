@@ -1,4 +1,4 @@
-# Pre-commit hooks for RAG Evaluation Pipeline
+# Pre-commit hooks for RAGLens
 # Install with: pre-commit install
 
 repos:

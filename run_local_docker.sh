@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script to build and run the RAG Evaluation API locally in Docker
+# Script to build and run the RAGLens API locally in Docker
 
 set -e
 

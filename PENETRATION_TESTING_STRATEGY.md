@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-This document outlines a comprehensive penetration testing strategy for the RAG Evaluation Platform, specifically focusing on the Bill agent integration and overall system security. The strategy covers multiple attack vectors including API security, authentication/authorization, input validation, infrastructure security, and data protection.
+This document outlines a comprehensive penetration testing strategy for RAGLens, specifically focusing on the Bill agent integration and overall system security. The strategy covers multiple attack vectors including API security, authentication/authorization, input validation, infrastructure security, and data protection.
 
 ## Table of Contents
 

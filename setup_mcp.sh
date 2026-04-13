@@ -1,7 +1,7 @@
 #!/bin/bash
 # Setup script for MCP Server
 
-echo "Setting up MCP Server for RAG Evaluation Pipeline..."
+echo "Setting up MCP Server for RAGLens..."
 
 # Activate virtual environment if it exists
 if [ -d "venv" ]; then

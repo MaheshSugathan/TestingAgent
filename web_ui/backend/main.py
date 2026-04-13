@@ -1,4 +1,4 @@
-"""FastAPI backend for RAG Evaluation Chat UI - proxies to Agent Core or API Server."""
+"""FastAPI backend for RAGLens Chat — proxies to Agent Core or API Server."""
 
 import os
 import json
@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, Any, Dict
 
-app = FastAPI(title="RAG Evaluation Chat API")
+app = FastAPI(title="RAGLens Chat API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -39,7 +39,7 @@ class InvokeRequest(BaseModel):
 
 @app.get("/")
 def root():
-    return {"status": "ok", "service": "RAG Evaluation Chat API"}
+    return {"status": "ok", "service": "RAGLens Chat API"}
 
 
 @app.get("/api/health")

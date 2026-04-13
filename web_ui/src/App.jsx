@@ -181,7 +181,7 @@ function App() {
   return (
     <div className="chat-container">
       <header className="chat-header">
-        <h1>RAG Evaluation Chat</h1>
+        <h1>RAGLens Chat</h1>
         <div className="header-actions">
           <label className="hitl-toggle">
             <input

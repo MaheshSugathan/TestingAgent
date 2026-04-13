@@ -1,8 +1,18 @@
-# RAG Evaluation Platform - Architecture
+# RAGLens — Architecture
+
+**AWS stack (three lines):**
+
+- **Bedrock Agent Core** — Runs the LangGraph pipeline in a container; requests enter through `agentcore_entry.py`.
+- **Amazon Bedrock + Amazon S3** — Foundation models (e.g. Claude) for LLM-as-a-Judge; S3 for retrieval corpora and eval inputs.
+- **Amazon CloudWatch + AWS IAM** — Logs and metrics namespace; optional **Lambda**, **Amazon Cognito**, **API Gateway**, and **Amazon ECR** for alternate invoke and hosting paths (see `lambda/` and `terraform/`).
+
+For badges and service links, see the **Built on AWS** section in [README.md](README.md).
+
+---
 
 ## 📐 System Architecture Overview
 
-The RAG Evaluation Platform is a multi-agent system that orchestrates document retrieval, response generation, and evaluation using AWS Bedrock Agent Core Runtime.
+RAGLens is a multi-agent system that orchestrates document retrieval, response generation, and evaluation using AWS Bedrock Agent Core Runtime.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐

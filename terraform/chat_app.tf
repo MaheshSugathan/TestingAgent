@@ -24,7 +24,7 @@ resource "aws_s3_bucket" "chat_ui" {
   bucket = local.chat_ui_bucket_name
 
   tags = merge(var.tags, {
-    Name = "RAG Evaluation Chat UI"
+    Name = "RAGLens Chat UI"
   })
 }
 
@@ -67,7 +67,7 @@ resource "aws_cloudfront_distribution" "chat_ui" {
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"
-  comment             = "RAG Evaluation Chat UI"
+  comment             = "RAGLens Chat UI"
   price_class         = "PriceClass_100"
 
   origin {

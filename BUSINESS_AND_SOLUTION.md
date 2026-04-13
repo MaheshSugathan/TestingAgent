@@ -1,4 +1,4 @@
-# Testing Agent Solution — Business & Solution Overview
+# RAGLens — Business & Solution Overview
 
 ## 1. Business Scenario
 
@@ -33,9 +33,9 @@ Organizations need a solution that:
 
 ## 2. Solution
 
-### 2.1 What the Testing Agent Does
+### 2.1 What RAGLens Does
 
-The **Testing Agent** is a **multi-agent RAG evaluation platform** that automates the full evaluation lifecycle. It runs on **AWS Bedrock Agent Core Runtime** and uses **LangGraph** to orchestrate three specialized agents:
+**RAGLens** is a **multi-agent RAG evaluation platform** that automates the full evaluation lifecycle. It runs on **AWS Bedrock Agent Core Runtime** and uses **LangGraph** to orchestrate three specialized agents:
 
 | Agent | Role | Capabilities |
 |-------|------|--------------|
@@ -102,7 +102,7 @@ From “evaluate this query” to “here are the scores and reports,” the flo
 
 ---
 
-## 4. Benefit Description for the Testing Agent Solution
+## 4. Benefit Description for RAGLens
 
 ### 4.1 Operational Benefits
 
@@ -140,7 +140,7 @@ From “evaluate this query” to “here are the scores and reports,” the flo
 
 ## 5. Summary
 
-The **Testing Agent** addresses the growing need for **automated, scalable, and rigorous evaluation of RAG applications**. It combines **multi-agent orchestration**, **dual evaluation paradigms (Ragas + LLM-as-a-Judge)**, and **cloud-native AWS deployment** into a single platform. Organizations gain **operational efficiency**, **better quality control**, **faster experimentation**, and **stronger auditability**—enabling them to ship and evolve RAG systems with greater confidence and fewer manual bottlenecks.
+**RAGLens** addresses the growing need for **automated, scalable, and rigorous evaluation of RAG applications**. It combines **multi-agent orchestration**, **dual evaluation paradigms (Ragas + LLM-as-a-Judge)**, and **cloud-native AWS deployment** into a single platform. Organizations gain **operational efficiency**, **better quality control**, **faster experimentation**, and **stronger auditability**—enabling them to ship and evolve RAG systems with greater confidence and fewer manual bottlenecks.
 
 ---
 

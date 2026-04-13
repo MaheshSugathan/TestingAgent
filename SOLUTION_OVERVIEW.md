@@ -1,8 +1,8 @@
-# Testing Agent - Solution Overview
+# RAGLens — Solution Overview
 
 ## Executive Summary
 
-The Testing Agent is a production-ready, multi-agent RAG (Retrieval-Augmented Generation) evaluation platform that automates the testing and evaluation of AI-powered applications. Built on AWS Bedrock Agent Core Runtime, this solution orchestrates three specialized agents using LangGraph to retrieve documents, generate responses, and comprehensively evaluate response quality using multiple evaluation methodologies.
+RAGLens is a production-ready, multi-agent RAG (Retrieval-Augmented Generation) evaluation platform that automates the testing and evaluation of AI-powered applications. Built on AWS Bedrock Agent Core Runtime, this solution orchestrates three specialized agents using LangGraph to retrieve documents, generate responses, and comprehensively evaluate response quality using multiple evaluation methodologies.
 
 The platform enables organizations to systematically test, benchmark, and improve their RAG systems with automated evaluation pipelines that combine both quantitative metrics (via Ragas) and qualitative assessment (via LLM-as-a-Judge).
 
@@ -18,7 +18,7 @@ As organizations increasingly deploy RAG-based applications, they face significa
 4. **Scalability**: Manual evaluation processes don't scale with increasing volumes of test cases
 5. **Integration Complexity**: Coordinating multiple evaluation methods and external systems
 
-The Testing Agent addresses these challenges by providing an automated, scalable, and comprehensive evaluation framework.
+RAGLens addresses these challenges by providing an automated, scalable, and comprehensive evaluation framework.
 
 ---
 
@@ -562,7 +562,7 @@ Support R&D efforts by providing comprehensive evaluation frameworks for experim
 
 ## Conclusion
 
-The Testing Agent provides a comprehensive, scalable, and production-ready solution for evaluating RAG-based applications. By combining multiple evaluation methodologies with robust orchestration and observability, it enables organizations to systematically test, benchmark, and improve their AI systems.
+RAGLens provides a comprehensive, scalable, and production-ready solution for evaluating RAG-based applications. By combining multiple evaluation methodologies with robust orchestration and observability, it enables organizations to systematically test, benchmark, and improve their AI systems.
 
 With its cloud-native architecture, flexible configuration, and comprehensive monitoring, the platform supports both development and production use cases, making it an essential tool for teams deploying RAG applications.
 

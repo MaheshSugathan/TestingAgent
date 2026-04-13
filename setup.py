@@ -1,4 +1,4 @@
-"""Setup script for the RAG Evaluation Pipeline."""
+"""Setup script for RAGLens."""
 
 from setuptools import setup, find_packages
 
@@ -9,14 +9,14 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
     requirements = [line.strip() for line in fh if line.strip() and not line.startswith("#")]
 
 setup(
-    name="rag-evaluation-pipeline",
+    name="raglens",
     version="1.0.0",
-    author="RAG Evaluation Team",
+    author="RAGLens",
     author_email="team@example.com",
-    description="A modular Python project for multi-agent RAG evaluation using LangChain, LangGraph, AWS Bedrock, and Ragas",
+    description="RAGLens — multi-agent RAG evaluation with LangGraph, AWS Bedrock, Ragas, and LLM-as-a-Judge",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/your-org/rag-evaluation-pipeline",
+    url="https://github.com/MaheshSugathan/TestingAgent",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -57,10 +57,10 @@ setup(
     package_data={
         "": ["config/*.yaml", "tests/data/*"],
     },
-    keywords="rag evaluation langchain langgraph aws bedrock ragas llm evaluation",
+    keywords="raglens rag evaluation langchain langgraph aws bedrock ragas llm evaluation",
     project_urls={
-        "Bug Reports": "https://github.com/your-org/rag-evaluation-pipeline/issues",
-        "Source": "https://github.com/your-org/rag-evaluation-pipeline",
-        "Documentation": "https://github.com/your-org/rag-evaluation-pipeline/docs",
+        "Bug Reports": "https://github.com/MaheshSugathan/TestingAgent/issues",
+        "Source": "https://github.com/MaheshSugathan/TestingAgent",
+        "Documentation": "https://github.com/MaheshSugathan/TestingAgent",
     },
 )

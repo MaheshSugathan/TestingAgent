@@ -1,14 +1,14 @@
-# Case Study: Automated RAG Evaluation at Scale
+# Case Study: RAGLens — Automated RAG Evaluation at Scale
 
 ## Global Insurance Co.: From Manual QA to Automated RAG Testing
 
-*This case study illustrates how an organization adopted the Testing Agent solution to automate evaluation of its RAG-based internal knowledge assistant. Names and figures are representative; the scenario reflects typical enterprise challenges and outcomes.*
+*This case study illustrates how an organization adopted **RAGLens** to automate evaluation of its RAG-based internal knowledge assistant. Names and figures are representative; the scenario reflects typical enterprise challenges and outcomes.*
 
 ---
 
 ## 1. Executive Summary
 
-**Global Insurance Co.** (GIC) deployed a RAG-powered internal assistant to help underwriters and claims staff find answers from policy documents, guidelines, and historical cases. After an initial pilot, the team struggled to validate quality consistently before each release. Manual review of sample queries was slow, subjective, and did not scale. By adopting the **Testing Agent** platform—multi-agent RAG evaluation on AWS Bedrock Agent Core—GIC automated end-to-end evaluation, cut pre-release validation from days to hours, and established reproducible quality benchmarks. The solution also improved confidence in model and retrieval changes and provided audit-ready evaluation reports for compliance.
+**Global Insurance Co.** (GIC) deployed a RAG-powered internal assistant to help underwriters and claims staff find answers from policy documents, guidelines, and historical cases. After an initial pilot, the team struggled to validate quality consistently before each release. Manual review of sample queries was slow, subjective, and did not scale. By adopting **RAGLens**—multi-agent RAG evaluation on AWS Bedrock Agent Core—GIC automated end-to-end evaluation, cut pre-release validation from days to hours, and established reproducible quality benchmarks. The solution also improved confidence in model and retrieval changes and provided audit-ready evaluation reports for compliance.
 
 ---
 
@@ -64,15 +64,15 @@ GIC set clear objectives:
 
 ---
 
-## 4. The Solution: Testing Agent Platform
+## 4. The Solution: RAGLens
 
-### 4.1 Why the Testing Agent?
+### 4.1 Why RAGLens?
 
 GIC evaluated build-vs-buy options:
 
 - **In-house scripts**: Flexible but required significant engineering to support Ragas, LLM-as-a-Judge, orchestration, and AWS integration.  
 - **Generic LLM evaluation tools**: Often single-model or single-metric; not purpose-built for full RAG pipelines.  
-- **Testing Agent**: Multi-agent RAG evaluation on Bedrock Agent Core, with Ragas + LLM-as-a-Judge, S3 ingestion, and pluggable external RAG (e.g., Guide/Bill). It matched GIC’s need for automation, standardization, and AWS-native deployment.
+- **RAGLens**: Multi-agent RAG evaluation on Bedrock Agent Core, with Ragas + LLM-as-a-Judge, S3 ingestion, and pluggable external RAG (e.g., Guide/Bill). It matched GIC’s need for automation, standardization, and AWS-native deployment.
 
 ### 4.2 Implementation Overview
 
@@ -86,7 +86,7 @@ GIC evaluated build-vs-buy options:
 
 **Deployment**
 
-- Testing Agent deployed as a container on **AWS Bedrock Agent Core Runtime** in the same AWS account and region as Guide.  
+- RAGLens deployed as a container on **AWS Bedrock Agent Core Runtime** in the same AWS account and region as Guide.  
 - Test datasets (curated queries + reference docs) stored in **S3**.  
 - Evaluation invoked via **CLI**, **AWS SDK**, and later **Lambda + API Gateway + Cognito** for secure, API-based access from internal tools.
 
@@ -94,7 +94,7 @@ GIC evaluated build-vs-buy options:
 
 - Dev Agent configured to call Guide’s (and optionally Bill’s) HTTP APIs.  
 - Queries and context (from Retrieval Agent) were sent to these services; generated answers were fed into the Evaluator Agent.  
-- No code changes in Guide; only configuration of the Testing Agent’s external agent endpoint.
+- No code changes in Guide; only configuration of RAGLens’s external agent endpoint.
 
 ### 4.3 Evaluation Design
 
@@ -111,7 +111,7 @@ GIC evaluated build-vs-buy options:
 
 ### 5.1 Validation Time
 
-| Metric | Before (manual) | After (Testing Agent) |
+| Metric | Before (manual) | After (RAGLens) |
 |--------|------------------|------------------------|
 | Pre-release validation | 3–5 days | **~4–6 hours** (automated run + review) |
 | Test query coverage | 50–100 | **200+** (expandable) |
@@ -183,7 +183,7 @@ GIC evaluated build-vs-buy options:
 
 ## 9. Conclusion
 
-Global Insurance Co. reduced pre-release validation from **3–5 days to roughly half a day**, standardized RAG quality assessment, and gained **audit-ready evaluation**. The Testing Agent’s **multi-agent orchestration**, **Ragas + LLM-as-a-Judge** blend, and **AWS-native deployment** allowed GIC to automate evaluation without replacing Guide. The same platform now supports faster experimentation and more confident releases as Guide’s scope and usage grow.
+Global Insurance Co. reduced pre-release validation from **3–5 days to roughly half a day**, standardized RAG quality assessment, and gained **audit-ready evaluation**. RAGLens’s **multi-agent orchestration**, **Ragas + LLM-as-a-Judge** blend, and **AWS-native deployment** allowed GIC to automate evaluation without replacing Guide. The same platform now supports faster experimentation and more confident releases as Guide’s scope and usage grow.
 
 ---
 

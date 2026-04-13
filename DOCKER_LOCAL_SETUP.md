@@ -1,6 +1,6 @@
 # Local Docker Deployment Guide
 
-This guide explains how to run the RAG Evaluation Pipeline locally using Docker.
+This guide explains how to run RAGLens locally using Docker.
 
 ## Prerequisites
 
