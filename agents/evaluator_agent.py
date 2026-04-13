@@ -4,7 +4,7 @@ import time
 from typing import List, Dict, Any, Optional
 
 from .base import EvaluatorAgent, AgentState
-from ..evaluation import RagasEvaluator, LLMJudgeEvaluator, EvaluationResult
+from evaluation import RagasEvaluator, LLMJudgeEvaluator, EvaluationResult
 
 
 class RAGEvaluatorAgent(EvaluatorAgent):

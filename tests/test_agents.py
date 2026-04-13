@@ -3,7 +3,7 @@
 import pytest
 import asyncio
 from unittest.mock import Mock, patch, MagicMock
-from langchain.schema import Document
+from langchain_core.documents import Document
 
 from agents.retrieval_agent import S3RetrievalAgent
 from agents.dev_agent import DevAgent

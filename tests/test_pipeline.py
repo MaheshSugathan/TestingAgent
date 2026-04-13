@@ -2,7 +2,7 @@
 
 import pytest
 import asyncio
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch, MagicMock, AsyncMock
 from datetime import datetime
 
 from orchestration import RAGEvaluationPipeline
@@ -207,18 +207,19 @@ class TestRAGEvaluationPipeline:
             data={"evaluations": ["eval1"]}
         ))
         
-        mock_workflow.ainvoke.return_value = mock_state
+        mock_workflow.ainvoke = AsyncMock(return_value=mock_state)
         pipeline.workflow = mock_workflow
-        
+
         result = await pipeline.run_single_turn_evaluation(
             query="What is machine learning?",
             session_id="test-session"
         )
-        
-        assert result.session_id == "test-session"
-        assert result.is_complete()
-        
-        # Verify workflow was called
+
+        assert "state" in result
+        assert result["state"].session_id == "test-session"
+        assert result["state"].is_complete()
+        assert "interrupt" not in result or result.get("interrupt") is None
+
         mock_workflow.ainvoke.assert_called_once()
     
     @pytest.mark.asyncio
@@ -250,19 +251,19 @@ class TestRAGEvaluationPipeline:
             data={"evaluations": ["eval1", "eval2"]}
         ))
         
-        mock_workflow.ainvoke.return_value = mock_state
+        mock_workflow.ainvoke = AsyncMock(return_value=mock_state)
         pipeline.workflow = mock_workflow
-        
+
         queries = ["What is ML?", "How does it work?"]
         result = await pipeline.run_multi_turn_evaluation(
             queries=queries,
             session_id="test-session"
         )
-        
-        assert result.session_id == "test-session"
-        assert result.is_complete()
-        
-        # Verify queries were passed in metadata
+
+        assert "state" in result
+        assert result["state"].session_id == "test-session"
+        assert result["state"].is_complete()
+
         call_args = mock_workflow.ainvoke.call_args[0][0]
         assert call_args.metadata["queries"] == queries
     

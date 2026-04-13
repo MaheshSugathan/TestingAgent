@@ -21,9 +21,9 @@ class AgentResult:
 @dataclass
 class PipelineState:
     """State object passed through the pipeline."""
-    session_id: str
-    pipeline_id: str
-    start_time: datetime
+    session_id: str = field(default_factory=lambda: f"rag-eval-{uuid.uuid4().hex[:8]}")
+    pipeline_id: str = field(default_factory=lambda: f"pipeline-{uuid.uuid4().hex[:8]}")
+    start_time: datetime = field(default_factory=datetime.utcnow)
     current_step: str = "initialized"
     
     # Agent results
@@ -39,12 +39,8 @@ class PipelineState:
     config: Dict[str, Any] = field(default_factory=dict)
     
     def __post_init__(self):
-        if not self.session_id:
-            self.session_id = f"rag-eval-{uuid.uuid4().hex[:8]}"
-        if not self.pipeline_id:
-            self.pipeline_id = f"pipeline-{uuid.uuid4().hex[:8]}"
-        if not self.start_time:
-            self.start_time = datetime.utcnow()
+        # These now have defaults in field definitions, but keep for backwards compatibility
+        pass
     
     def add_agent_result(self, result: AgentResult) -> None:
         """Add agent result to state."""
@@ -116,6 +112,56 @@ class PipelineState:
         """Get execution time for specific agent."""
         result = getattr(self, f"{agent_name}_result", None)
         return result.execution_time if result else 0.0
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'PipelineState':
+        """Create PipelineState from dictionary (for LangGraph state reconstruction)."""
+        # Handle start_time conversion
+        start_time = data.get('start_time')
+        if isinstance(start_time, str):
+            start_time = datetime.fromisoformat(start_time)
+        elif not isinstance(start_time, datetime):
+            start_time = datetime.utcnow()
+        
+        # Reconstruct AgentResult objects
+        def reconstruct_agent_result(result_data: Any) -> Optional[AgentResult]:
+            if result_data is None:
+                return None
+            if isinstance(result_data, AgentResult):
+                return result_data
+            if isinstance(result_data, dict):
+                # Handle timestamp conversion
+                timestamp = result_data.get('timestamp')
+                if isinstance(timestamp, str):
+                    timestamp = datetime.fromisoformat(timestamp)
+                elif not isinstance(timestamp, datetime):
+                    timestamp = datetime.utcnow()
+                else:
+                    timestamp = timestamp
+                
+                return AgentResult(
+                    agent_name=result_data.get('agent_name', ''),
+                    success=result_data.get('success', False),
+                    data=result_data.get('data', {}),
+                    metadata=result_data.get('metadata', {}),
+                    error=result_data.get('error'),
+                    execution_time=result_data.get('execution_time', 0.0),
+                    timestamp=timestamp
+                )
+            return None
+        
+        return cls(
+            session_id=data.get('session_id', ''),
+            pipeline_id=data.get('pipeline_id', ''),
+            start_time=start_time,
+            current_step=data.get('current_step', 'initialized'),
+            retrieval_result=reconstruct_agent_result(data.get('retrieval_result')),
+            dev_result=reconstruct_agent_result(data.get('dev_result')),
+            evaluator_result=reconstruct_agent_result(data.get('evaluator_result')),
+            metadata=data.get('metadata', {}),
+            errors=data.get('errors', []),
+            config=data.get('config', {})
+        )
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert state to dictionary."""

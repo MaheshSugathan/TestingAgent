@@ -3,7 +3,7 @@
 import time
 from typing import List, Dict, Any, Optional
 
-from langchain.schema import Document
+from langchain_core.documents import Document
 from .base import BaseAgent, AgentState
 from agents.external_agent_interface import BillAgentInterface, AgentCoreRequest, AgentCoreResponse
 

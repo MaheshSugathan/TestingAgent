@@ -1,0 +1,22 @@
+# Copy this file to terraform.tfvars and update with your values
+
+aws_region   = "us-east-1"
+agent_name   = "rag_evaluation_agent"
+project_name = "rag-evaluation"
+
+# Agent - use ONE of these for Lambda:
+# agent_arn: for Bedrock Agent Runtime (boto3)
+# agent_http_url: for Agent Core HTTP endpoint (recommended)
+agent_arn      = "arn:aws:bedrock-agentcore:us-east-1:123456789012:runtime/your-runtime-id"
+agent_http_url = ""  # e.g. "https://your-agent-runtime.amazonaws.com"
+
+# Cognito - add CloudFront URL after chat UI deploy
+cognito_callback_urls = ["http://localhost:3000/callback", "http://localhost:5173/callback"]
+cognito_logout_urls   = ["http://localhost:3000", "http://localhost:5173"]
+
+tags = {
+  Project     = "RAG-Evaluation"
+  Environment = "test"
+  ManagedBy   = "terraform"
+}
+

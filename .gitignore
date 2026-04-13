@@ -79,4 +79,35 @@ orchestration/__pycache__/
 *.tmp
 *.bak
 *.swp
+
+# AWS Bedrock Agent Core deployment files (user-specific)
+.bedrock_agentcore/
+.bedrock_agentcore.yaml
+.bedrock_agentcore.*.yaml
+
+# AWS deployment configs (may contain account-specific info)
+agent-config.json
+bedrock-agent-config.json
+bedrock-agent-simple.json
+
+# Terraform (provider cache, local state — never commit)
+.terraform/
+*.tfplan
+tfplan
+
+# Security / scanner artifacts and credential exports
+bandit-report.json
+credentials.csv
+
+# Docker build artifacts (keep .dockerignore, it's needed for builds)
+# .dockerignore should be committed
+
+# Output/test files (keep test data, exclude output)
+*.json
+!tests/data/*.json
+!config/config.yaml
+!package*.json
+
+# Documentation (keep main docs, exclude old docs)
 docs/
+!docs/*.md

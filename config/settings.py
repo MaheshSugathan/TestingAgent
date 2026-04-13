@@ -56,13 +56,13 @@ class S3Config(BaseModel):
 
 class EvaluationConfig(BaseModel):
     """Evaluation configuration."""
-    ragas: Dict[str, any] = Field(
+    ragas: Dict[str, Any] = Field(
         default={
             "enabled": True,
             "metrics": ["faithfulness", "relevance", "correctness", "context_precision"]
         }
     )
-    llm_judge: Dict[str, any] = Field(
+    llm_judge: Dict[str, Any] = Field(
         default={
             "enabled": True,
             "model": "anthropic.claude-3-sonnet-20240229-v1:0",

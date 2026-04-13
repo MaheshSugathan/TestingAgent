@@ -3,10 +3,11 @@ FROM python:3.11-slim
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies
+# Install system dependencies (including git for langchain-community)
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
@@ -15,20 +16,21 @@ COPY requirements.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install OpenTelemetry for observability (required for Agent Core)
+RUN pip install --no-cache-dir aws-opentelemetry-distro>=0.10.1
+
 # Copy application code
 COPY . .
 
 # Set environment variables
 ENV PYTHONPATH=/app
 ENV PYTHONUNBUFFERED=1
+ENV GIT_PYTHON_REFRESH=quiet
 
-# Expose port for API
-EXPOSE 8080
+# Expose ports (Agent Core uses port 9000, but we expose multiple for compatibility)
+EXPOSE 9000 8000 8080
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD python -c "import sys; sys.exit(0)"
-
-# Run the application
-CMD ["python", "-m", "agents.dev_agent"]
+# Entry point for Bedrock Agent Core Runtime
+# The agentcore toolkit will handle HTTP server setup, we just need to expose the handler
+CMD ["opentelemetry-instrument", "python", "-m", "agentcore_entry"]
 

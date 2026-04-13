@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+
+# Docker
+# Dockerfile.bedrock
+docker-compose.yml
+
+# Documentation
+docs/
+*.md
+README.md
+
+# Tests
+tests/
+*.test.py
+
+# AWS
+.aws/
+*.pem
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+*.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Deployment scripts
+deploy_to_bedrock_agentcore.sh
+cloudformation/
+

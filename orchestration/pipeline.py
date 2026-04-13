@@ -5,9 +5,12 @@ import time
 from typing import Dict, Any, Optional, List
 from datetime import datetime
 
+from langgraph.types import Command
+from langgraph.checkpoint.memory import MemorySaver
+
 from .state import PipelineState
 from .workflow import create_evaluation_workflow
-from ..observability import setup_logger, MetricsCollector
+from observability import setup_logger, MetricsCollector
 
 
 class RAGEvaluationPipeline:
@@ -31,11 +34,11 @@ class RAGEvaluationPipeline:
         self.metrics = metrics_collector or MetricsCollector(
             namespace=config.get("aws", {}).get("cloudwatch", {}).get("namespace", "RAGEvaluation")
         )
-        
-        # Initialize workflow
-        self.workflow = create_evaluation_workflow()
-        
-        # Pipeline configuration
+
+        # Checkpointer for human-in-the-loop (required for interrupt/resume)
+        self.checkpointer = MemorySaver()
+        self.workflow = create_evaluation_workflow(checkpointer=self.checkpointer)
+
         self.max_retries = config.get("pipeline", {}).get("max_pipeline_retries", 2)
         self.enable_retries = config.get("pipeline", {}).get("enable_retries", True)
     
@@ -43,118 +46,145 @@ class RAGEvaluationPipeline:
         self,
         queries: Optional[List[str]] = None,
         session_id: Optional[str] = None,
+        human_in_loop: Optional[bool] = None,
         **kwargs
-    ) -> PipelineState:
+    ) -> Dict[str, Any]:
         """Run the complete RAG evaluation pipeline.
-        
+
         Args:
             queries: List of queries to evaluate (optional)
-            session_id: Session ID for tracking
+            session_id: Session ID for tracking (used as thread_id for HITL resume)
+            human_in_loop: Override config to enable/disable HITL for this run
             **kwargs: Additional parameters
-            
+
         Returns:
-            Final pipeline state
+            Dict with keys:
+            - "state": Final PipelineState
+            - "interrupt": Optional interrupt payload if awaiting human review
         """
-        # Create initial state
+        session_id = session_id or f"rag-eval-{int(time.time())}"
+
+        merged_config = dict(self.config)
+        if human_in_loop is not None:
+            merged_config.setdefault("human_in_loop", {})["enabled"] = human_in_loop
+        if "human_in_loop" not in merged_config:
+            merged_config["human_in_loop"] = {"enabled": False}
+
         state = PipelineState(
-            session_id=session_id or f"rag-eval-{int(time.time())}",
-            config=self.config,
+            session_id=session_id,
+            config=merged_config,
             metadata={
                 "queries": queries or [],
                 "pipeline_start_time": datetime.utcnow().isoformat(),
+                "human_in_loop": merged_config["human_in_loop"].get("enabled", False),
                 **kwargs
             }
         )
-        
-        self.logger.info(f"Starting RAG evaluation pipeline", extra={
+
+        self.logger.info("Starting RAG evaluation pipeline", extra={
             "session_id": state.session_id,
-            "pipeline_id": state.pipeline_id
+            "pipeline_id": state.pipeline_id,
+            "human_in_loop": state.metadata.get("human_in_loop", False)
         })
-        
+
         try:
-            # Execute workflow
-            final_state = await self.workflow.ainvoke(state)
-            
-            # Record pipeline metrics
+            config = {"configurable": {"thread_id": session_id}}
+            workflow_result = await self.workflow.ainvoke(state, config=config)
+
+            interrupt_data = None
+            if isinstance(workflow_result, dict):
+                interrupt_data = workflow_result.pop("__interrupt__", None)
+                final_state = PipelineState.from_dict(workflow_result)
+            else:
+                final_state = workflow_result
+
             self._record_pipeline_metrics(final_state)
-            
-            # Log completion
+
             if final_state.is_complete():
                 self.logger.info(
                     "Pipeline completed successfully",
-                    extra={
-                        "session_id": final_state.session_id,
-                        "execution_time": final_state.get_total_execution_time()
-                    }
+                    extra={"session_id": final_state.session_id, "execution_time": final_state.get_total_execution_time()}
                 )
             else:
                 self.logger.error(
                     "Pipeline completed with errors",
-                    extra={
-                        "session_id": final_state.session_id,
-                        "errors": final_state.errors,
-                        "execution_time": final_state.get_total_execution_time()
-                    }
+                    extra={"session_id": final_state.session_id, "errors": final_state.errors}
                 )
-            
-            return final_state
-            
+
+            result = {"state": final_state}
+            if interrupt_data is not None:
+                result["interrupt"] = [v.value if hasattr(v, "value") else v for v in interrupt_data]
+            return result
+
         except Exception as e:
-            self.logger.error(
-                f"Pipeline execution failed: {e}",
-                extra={
-                    "session_id": state.session_id,
-                    "error": str(e)
-                }
-            )
-            
-            # Record failure metric
-            self.metrics.add_metric(
-                metric_name="pipeline_failure",
-                value=1.0,
-                unit="Count",
-                dimensions={"session_id": state.session_id}
-            )
-            
+            self.logger.error(f"Pipeline execution failed: {e}", extra={"session_id": state.session_id, "error": str(e)})
+            self.metrics.add_metric(metric_name="pipeline_failure", value=1.0, unit="Count", dimensions={"session_id": state.session_id})
             raise
+
+    async def resume_pipeline(
+        self,
+        session_id: str,
+        human_decision: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Resume pipeline after human-in-the-loop interrupt.
+
+        Args:
+            session_id: Same session_id from the interrupted run (thread_id)
+            human_decision: Human's decision, e.g. {"action": "approve"} or {"action": "override", "score": 0.85}
+
+        Returns:
+            Same structure as run_pipeline: {"state": ..., "interrupt": ...}
+        """
+        config = {"configurable": {"thread_id": session_id}}
+        workflow_result = await self.workflow.ainvoke(Command(resume=human_decision), config=config)
+
+        interrupt_data = workflow_result.pop("__interrupt__", None)
+
+        if isinstance(workflow_result, dict):
+            final_state = PipelineState.from_dict(workflow_result)
+        else:
+            final_state = workflow_result
+
+        self._record_pipeline_metrics(final_state)
+
+        result = {"state": final_state}
+        if interrupt_data is not None:
+            result["interrupt"] = [v.value if hasattr(v, "value") else v for v in interrupt_data]
+        return result
     
     async def run_single_turn_evaluation(
         self,
         query: str,
-        session_id: Optional[str] = None
-    ) -> PipelineState:
+        session_id: Optional[str] = None,
+        human_in_loop: Optional[bool] = None,
+    ) -> Dict[str, Any]:
         """Run single-turn evaluation pipeline.
-        
-        Args:
-            query: Single query to evaluate
-            session_id: Session ID for tracking
-            
+
         Returns:
-            Final pipeline state
+            Dict with "state" (PipelineState) and optionally "interrupt" (if awaiting human review)
         """
         return await self.run_pipeline(
             queries=[query],
             session_id=session_id,
+            human_in_loop=human_in_loop,
             evaluation_type="single_turn"
         )
-    
+
     async def run_multi_turn_evaluation(
         self,
         queries: List[str],
-        session_id: Optional[str] = None
-    ) -> PipelineState:
+        session_id: Optional[str] = None,
+        human_in_loop: Optional[bool] = None,
+    ) -> Dict[str, Any]:
         """Run multi-turn evaluation pipeline.
-        
-        Args:
-            queries: List of queries for multi-turn conversation
-            session_id: Session ID for tracking
-            
+
         Returns:
-            Final pipeline state
+            Dict with "state" (PipelineState) and optionally "interrupt" (if awaiting human review)
         """
         return await self.run_pipeline(
             queries=queries,
             session_id=session_id,
+            human_in_loop=human_in_loop,
             evaluation_type="multi_turn"
         )
     

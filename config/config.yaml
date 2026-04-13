@@ -71,6 +71,18 @@ pipeline:
   max_pipeline_retries: 2
   parallel_evaluation: true
 
+# Human-in-the-Loop Configuration
+# When enabled, pipeline pauses for human review when evaluation scores fall below threshold
+human_in_loop:
+  enabled: false  # Set true for HITL mode; can also be overridden per-request
+  review_threshold: 0.8  # Scores below this trigger human review (uses evaluation.thresholds.overall if not set)
+
+# Sitemap-based testing (help & support agent with Pinecone)
+sitemap_qa:
+  sitemap_url: "https://example.com/sitemap.xml"
+  max_qa_pairs: 15
+  max_followups_per_turn: 3
+
 # Logging Configuration
 logging:
   level: "INFO"

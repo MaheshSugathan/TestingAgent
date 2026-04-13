@@ -1,183 +1,251 @@
-# RAG Agent Evaluation Platform
+# RAG Evaluation Platform
 
-A modular Python project implementing a multi-agent RAG (Retrieval-Augmented Generation) evaluation pipeline deployed on AWS Bedrock Agent Core.
+A production-ready multi-agent RAG (Retrieval-Augmented Generation) evaluation pipeline deployed on **AWS Bedrock Agent Core Runtime**.
+
+## 🎯 Overview
+
+The RAG Evaluation Platform orchestrates three specialized agents using LangGraph to:
+1. **Retrieve** documents from S3
+2. **Generate** responses using external agents
+3. **Evaluate** response quality using Ragas and LLM-as-a-Judge
+
+All deployed and running on AWS Bedrock Agent Core Runtime.
 
 ## 🏗️ Architecture
 
-### **Deployed Architecture:**
-
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│          AWS Bedrock Agent (rag-evaluation-agent)         │
-│                   Status: PREPARED                         │
-└─────────────────────┬───────────────────────────────────────┘
-                      │
-                      ↓
-        ┌──────────────────────────────────┐
-        │      Docker Container            │
-        │  (Your RAG Evaluation Code)     │
-        │                                  │
-        │  ┌──────────────────────────┐   │
-        │  │   LangGraph Pipeline      │   │
-        │  │                          │   │
-        │  │  Step 1: Retrieval       │   │
-        │  │  ├─ Load from S3         │   │
-        │  │  └─ Return docs          │   │
-        │  │       ↓                    │   │
-        │  │  Step 2: Dev Agent        │   │
-        │  │  ├─ Use documents         │   │
-        │  │  ├─ Call external agent   │   │
-        │  │  └─ Generate response     │   │
-        │  │       ↓                    │   │
-        │  │  Step 3: Evaluator       │   │
-        │  │  ├─ Evaluate response     │   │
-        │  │  └─ Return scores         │   │
-        │  └──────────────────────────┘   │
-        └──────────────────────────────────┘
+│           AWS Bedrock Agent Core Runtime                    │
+│                                                             │
+│  ┌──────────────────────────────────────────────────────┐ │
+│  │              Entry Point (agentcore_entry.py)         │ │
+│  └───────────────────────┬────────────────────────────────┘ │
+│                          │                                  │
+│  ┌──────────────────────────────────────────────────────┐ │
+│  │         LangGraph Workflow (orchestration/)          │ │
+│  │                                                       │ │
+│  │  Retrieval → Dev → Evaluator                         │ │
+│  │     ↓         ↓         ↓                            │ │
+│  │   S3      External   Ragas+LLM                       │ │
+│  └──────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### **Agent Components:**
+**Key Components:**
+- **Retrieval Agent**: Fetches documents from S3
+- **Dev Agent**: Generates responses via external agent integration
+- **Evaluator Agent**: Evaluates responses using Ragas and LLM-as-a-Judge
+- **LangGraph**: Orchestrates the multi-agent workflow
 
-1. **S3RetrievalAgent** (`agents/retrieval_agent.py`)
-   - Loads documents from S3
-   - Returns LangChain Document objects
+📖 **Detailed Architecture**: See [ARCHITECTURE.md](ARCHITECTURE.md)
 
-2. **DevAgent** (`agents/dev_agent.py`)
-   - Uses documents from retrieval
-   - Integrates with external agents via AgentCore
-   - Generates responses
+## 🚀 Quick Start
 
-3. **RAGEvaluatorAgent** (`agents/evaluator_agent.py`)
-   - Evaluates responses from DevAgent
-   - Uses Ragas and LLM-as-a-Judge
-   - Returns evaluation scores
+### Prerequisites
 
-4. **LangGraph Orchestration** (`orchestration/workflow.py`)
-   - Coordinates the three agents
-   - Manages pipeline flow
-   - Handles state transitions
+- Python 3.11+
+- Docker 20.10+
+- AWS CLI configured
+- Bedrock Agent Core access enabled
 
-## 🚀 Deployment
-
-### **Deployment Status:**
-
-- **Agent ID**: `DBW5ST5EOA`
-- **Alias ID**: `57RZ07YLVI`
-- **Status**: ✅ PREPARED
-- **Region**: us-east-1
-- **Image**: `890742586186.dkr.ecr.us-east-1.amazonaws.com/rag-evaluation-agent-core:latest`
-
-### **Deploy Command:**
+### Installation
 
 ```bash
-./deploy_to_bedrock_agentcore.sh
+# Clone repository
+git clone <repository-url>
+cd TestingAgents
+
+# Install dependencies
+pip install -r requirements.txt
+pip install bedrock-agentcore-starter-toolkit
 ```
 
-This script:
-1. Creates ECR repository
-2. Builds Docker image
-3. Pushes to ECR
-4. Creates Bedrock agent
-5. Sets up IAM roles
-6. Configures S3 bucket
+### Deployment
 
-## 📋 Prerequisites
+```bash
+# 1. Configure Agent Core
+agentcore configure \
+  --agent-name rag_evaluation_agent \
+  --region us-east-1 \
+  --disable-memory
 
-- AWS CLI configured
-- Docker installed
-- Python 3.11+
-- AWS Bedrock access enabled
+# 2. Deploy to AWS
+agentcore launch \
+  --agent-name rag_evaluation_agent \
+  --region us-east-1 \
+  --local-build
 
-## 🔧 Configuration
+# 3. Verify deployment
+agentcore status
 
-Main configuration in `config/config.yaml`:
-
-```yaml
-agents:
-  retrieval-agent:
-    # S3 configuration
-  dev-agent:
-    # AgentCore integration
-  evaluator-agent:
-    # Evaluation settings
+# 4. Test invocation
+agentcore invoke '{"prompt": "What is RAG?"}'
 ```
 
-## 📖 Usage
+📖 **Complete Deployment Guide**: See [DEPLOYMENT.md](DEPLOYMENT.md)
 
-### **Via AWS Console:**
+## 📋 Usage
 
-https://console.aws.amazon.com/bedrock/home?region=us-east-1#/agents/DBW5ST5EOA
+### Via Agent Core CLI
 
-### **Via Python SDK:**
+```bash
+agentcore invoke '{"prompt": "What is RAG?"}'
+```
+
+### Via AWS SDK (Python)
 
 ```python
 import boto3
 
-client = boto3.client('bedrock-agent-runtime', region_name='us-east-1')
-response = client.invoke_agent(
-    agentId="DBW5ST5EOA",
-    agentAliasId="57RZ07YLVI",
-    sessionId="session-123",
-    inputText="What is RAG?"
+client = boto3.client('bedrock-agentcore', region_name='us-east-1')
+
+# Get agent ARN from: agentcore status
+response = client.invoke_agent_runtime(
+    agentRuntimeArn='arn:aws:bedrock-agentcore:us-east-1:...',
+    runtimeSessionId='session-123',
+    payload=json.dumps({"prompt": "What is RAG?"}).encode()
 )
 
-for event in response.get('completion', []):
-    if 'chunk' in event and 'bytes' in event['chunk']:
-        print(event['chunk']['bytes'].decode('utf-8'), end='')
+# Process streaming response
+for line in response['response'].iter_lines():
+    if line:
+        print(line.decode('utf-8'))
+```
+
+### Via AWS CLI
+
+```bash
+AGENT_ARN=$(agentcore status | grep "Agent ARN" | tail -1 | awk '{print $NF}')
+
+aws bedrock-agent-runtime invoke-agent-runtime \
+  --agent-arn "${AGENT_ARN}" \
+  --input-text "What is RAG?" \
+  --session-id "session-$(date +%s)" \
+  --region us-east-1 \
+  output.json
 ```
 
 ## 📁 Project Structure
 
 ```
-.
-├── agents/                  # Agent implementations
-│   ├── retrieval_agent.py   # S3 document retrieval
-│   ├── dev_agent.py          # Response generation with external agent
-│   ├── evaluator_agent.py    # RAG evaluation
+TestingAgents/
+├── agentcore_entry.py          # Entry point for Agent Core Runtime
+├── Dockerfile.bedrock          # Docker image for deployment
+├── requirements.txt            # Python dependencies
+│
+├── agents/                     # Agent implementations
+│   ├── base.py                # Base agent class
+│   ├── retrieval_agent.py     # S3 document retrieval
+│   ├── dev_agent.py           # Response generation
+│   ├── evaluator_agent.py     # Response evaluation
 │   └── external_agent_interface.py  # External agent integration
-├── orchestration/            # LangGraph workflow
-│   ├── workflow.py          # Agent orchestration
-│   ├── pipeline.py          # Pipeline execution
-│   └── state.py             # State management
-├── evaluation/              # Evaluation logic
-│   ├── ragas_evaluator.py   # Ragas evaluation
-│   └── llm_judge.py         # LLM-as-a-Judge
-├── observability/           # Logging and metrics
-│   ├── cloudwatch_handler.py
-│   ├── logger.py
-│   └── metrics.py
-├── config/                  # Configuration
-│   └── config.yaml
-├── tests/                   # Test data
-│   └── data/
-├── cloudformation/          # CloudFormation templates
-│   └── dashboard.yaml
-├── Dockerfile.bedrock       # Docker image for Bedrock
-├── deploy_to_bedrock_agentcore.sh  # Deployment script
-└── requirements.txt         # Python dependencies
+│
+├── orchestration/              # LangGraph workflow
+│   ├── pipeline.py            # Pipeline coordinator
+│   ├── workflow.py            # Workflow definition
+│   └── state.py               # State management
+│
+├── evaluation/                 # Evaluation modules
+│   ├── ragas_evaluator.py     # Ragas metrics
+│   └── llm_judge.py          # LLM-as-a-Judge
+│
+├── observability/              # Logging and metrics
+│   ├── logger.py              # Structured logging
+│   └── metrics.py             # CloudWatch metrics
+│
+└── config/                     # Configuration
+    ├── config.yaml            # YAML configuration
+    └── config_manager.py      # Config loader
 ```
 
-## 🤝 External Agent Integration
+## 🔧 Configuration
 
-The platform supports integration with external agents:
+### Environment Variables
 
-- **DevAgent** uses `BillAgentInterface` to connect to external agents
-- HTTP-based communication
-- Retry logic and error handling
-- Configurable via `agentcore_base_url`
+Create `.env` file (optional):
+
+```bash
+AWS_REGION=us-east-1
+S3_BUCKET=rag-evaluation-datasets
+BEDROCK_REGION=us-east-1
+```
+
+### Configuration File
+
+Edit `config/config.yaml`:
+
+```yaml
+aws:
+  region: "us-east-1"
+
+s3:
+  bucket: "rag-evaluation-datasets"
+  key_prefix: "test-data/"
+
+bedrock:
+  region: "us-east-1"
+  models:
+    judge: "anthropic.claude-3-sonnet-20240229-v1:0"
+
+agentcore:
+  enabled: true
+  base_url: "http://localhost:8000"
+  bill:
+    agent_name: "bill"
+    timeout: 60
+```
 
 ## 📊 Monitoring
 
-- **CloudWatch Logs**: `/aws/bedrock/agents/rag-evaluation`
-- **CloudWatch Metrics**: Custom metrics for evaluation scores
-- **Console**: https://console.aws.amazon.com/cloudwatch/
+### CloudWatch Logs
 
-## 🔗 Key URLs
+```bash
+LOG_GROUP="/aws/bedrock-agentcore/runtimes/rag_evaluation_agent-*-DEFAULT"
 
-- **Agent Console**: https://console.aws.amazon.com/bedrock/home?region=us-east-1#/agents/DBW5ST5EOA
-- **CloudWatch Logs**: https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#logsV2:log-groups
-- **S3 Bucket**: `rag-evaluation-documents-890742586186`
-- **ECR Repository**: `rag-evaluation-agent-core`
+aws logs tail "${LOG_GROUP}" \
+  --log-stream-name-prefix "$(date +%Y/%m/%d)/[runtime-logs]" \
+  --follow \
+  --region us-east-1
+```
+
+### CloudWatch Dashboard
+
+- **GenAI Dashboard**: https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#gen-ai-observability/agent-core
+- **Agent Core Console**: https://console.aws.amazon.com/bedrock-agentcore/
+
+## 🔍 Troubleshooting
+
+### Common Issues
+
+1. **404 Error**: Wrong API client or ARN format
+   - See [TROUBLESHOOTING_404.md](TROUBLESHOOTING_404.md)
+
+2. **boto3 Method Not Found**: Update boto3
+   - See [AWS_SDK_SUPPORT.md](AWS_SDK_SUPPORT.md)
+
+3. **Invocation Flow**: How agents are invoked
+   - See [AGENT_INVOCATION_FLOW.md](AGENT_INVOCATION_FLOW.md)
+
+## 📚 Documentation
+
+- **[BUSINESS_AND_SOLUTION.md](BUSINESS_AND_SOLUTION.md)** - Business scenario, solution, uniqueness, benefits
+- **[CASE_STUDY.md](CASE_STUDY.md)** - Case study: automated RAG evaluation at scale
+- **[HUMAN_IN_LOOP.md](HUMAN_IN_LOOP.md)** - Human-in-the-loop (HITL) usage guide
+- **[SITEMAP_QA_TESTING.md](SITEMAP_QA_TESTING.md)** - Sitemap-based Q&A generation and follow-up testing for help/support agents
+- **[SITEMAP_QA_IMPLEMENTATION_PROMPT.md](SITEMAP_QA_IMPLEMENTATION_PROMPT.md)** - Copy-paste prompt to implement this QA flow in another project
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Detailed system architecture
+- **[SOLUTION_OVERVIEW.md](SOLUTION_OVERVIEW.md)** - Technical solution overview
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Complete deployment guide
+- **[AGENT_INVOCATION_FLOW.md](AGENT_INVOCATION_FLOW.md)** - How agents are invoked
+- **[TROUBLESHOOTING_404.md](TROUBLESHOOTING_404.md)** - Fix 404 errors
+- **[AWS_SDK_SUPPORT.md](AWS_SDK_SUPPORT.md)** - AWS SDK version requirements
+
+## 🔐 Security
+
+- IAM role-based authentication
+- Non-root container user
+- CloudWatch encrypted logs
+- VPC isolation support
 
 ## 📝 License
 
@@ -185,8 +253,8 @@ MIT License
 
 ## 🎯 Status
 
-✅ **Deployed and Ready**
-- Agent is PREPARED and ready to receive queries
-- All three internal agents orchestrated by LangGraph
-- External agent connectivity configured
-- Monitoring and logging enabled
+✅ **Deployed and Operational**
+- Agent Core Runtime: READY
+- All agents: Functional
+- Monitoring: Enabled
+- Logs: Available in CloudWatch
