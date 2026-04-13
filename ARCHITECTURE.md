@@ -6,7 +6,7 @@
 - **Amazon Bedrock + Amazon S3** — Foundation models (e.g. Claude) for LLM-as-a-Judge; S3 for retrieval corpora and eval inputs.
 - **Amazon CloudWatch + AWS IAM** — Logs and metrics namespace; optional **Lambda**, **Amazon Cognito**, **API Gateway**, and **Amazon ECR** for alternate invoke and hosting paths (see `lambda/` and `terraform/`).
 
-For badges and service links, see the **Built on AWS** section in [README.md](README.md).
+For badges and service links, see the **AWS stack** section in [README.md](README.md).
 
 ---
 

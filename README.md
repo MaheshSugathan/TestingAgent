@@ -1,14 +1,62 @@
+<div align="center">
+
 # RAGLens
 
-*Bring RAG quality into focus — retrieve, generate, judge, repeat.*
+### *See your RAG clearly — then ship with proof.*
 
-**Measure what matters.** A production-style, multi-agent pipeline that **retrieves**, **generates**, and **scores** RAG answers—with **Ragas**, **LLM-as-a-Judge**, and **AWS Bedrock Agent Core** baked in.
+**Retrieve → generate → score.** One LangGraph pipeline on **AWS Bedrock Agent Core**, with **Ragas** + **LLM-as-a-Judge** so you iterate on facts, not vibes.
 
-Stop guessing if your retrieval is helping. Run a structured eval loop, ship metrics to CloudWatch, and iterate with confidence.
+<br/>
 
-## Built on AWS — and wired for eval
+[![License](https://img.shields.io/github/license/MaheshSugathan/raglens?label=License&logo=opensourceinitiative)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![Stars](https://img.shields.io/github/stars/MaheshSugathan/raglens?style=social)](https://github.com/MaheshSugathan/raglens/stargazers)
+[![Forks](https://img.shields.io/github/forks/MaheshSugathan/raglens?style=social)](https://github.com/MaheshSugathan/raglens/network/members)
 
-**Same cloud as your models:** the pipeline is meant to run **on AWS**, with **Bedrock** for generation *and* judging, **S3** for documents, **CloudWatch** for signals, and **Agent Core** as the runtime that holds the LangGraph workflow together.
+<p align="center">
+  <a href="#the-problem">Problem / fix</a> ·
+  <a href="#why-raglens">Why RAGLens</a> ·
+  <a href="#aws-stack">AWS stack</a> ·
+  <a href="#quick-start">Quick start</a> ·
+  <a href="#documentation">Docs</a>
+</p>
+
+</div>
+
+---
+
+## The problem
+
+| Without a real eval loop | With RAGLens |
+|---------------------------|--------------|
+| “It feels better” after a prompt change | **Metrics** you can compare run-to-run |
+| Retrieval and answers tested in isolation | **End-to-end** retrieval → answer → judge |
+| Logs scattered, hard to trust in prod | **CloudWatch**-friendly metrics path |
+
+---
+
+## Why RAGLens
+
+| You want to… | This gives you… |
+|--------------|-----------------|
+| Compare models or prompts fairly | Repeatable metrics (faithfulness, relevance, correctness) |
+| See retrieval + generation end-to-end | LangGraph workflow: Retrieval → Dev → Evaluator |
+| Run on AWS without reinventing ops | **Bedrock Agent Core** entrypoint, Docker, observability hooks |
+| Keep humans in the loop when scores dip | Optional **HITL** pause in the pipeline |
+
+**Highlights**
+
+- **Multi-agent orchestration** — LangGraph ties retrieval, response generation, and evaluation into one flow.
+- **Dual evaluation** — Classical Ragas metrics plus LLM-as-a-Judge on Amazon Bedrock.
+- **Observable by default** — Structured logging and CloudWatch-friendly metrics.
+- **Agent Core ready** — `agentcore_entry.py` and `Dockerfile.bedrock` for **AWS Bedrock Agent Core Runtime**.
+- **Extras in-repo** — Web UI (`web_ui/`), Lambda/Cognito patterns, Terraform samples, sitemap QA tooling.
+
+---
+
+## AWS stack
+
+**Built on AWS — wired for eval.** **Same cloud as your models:** **Bedrock** for generation *and* judging, **S3** for documents, **CloudWatch** for signals, **Agent Core** as the runtime for your LangGraph workflow.
 
 | Area | What we use |
 |------|-------------|
@@ -18,7 +66,7 @@ Stop guessing if your retrieval is helping. Run a structured eval loop, ship met
 | **Observability** | [Amazon CloudWatch](https://aws.amazon.com/cloudwatch/) — logs & metrics namespace |
 | **Security** | [AWS IAM](https://aws.amazon.com/iam/) — roles & least-privilege patterns in docs/Terraform |
 | **Shipping the app** | [Amazon ECR](https://aws.amazon.com/ecr/) — images for Agent Core; **Docker** locally |
-| **Optional production paths** | [AWS Lambda](https://aws.amazon.com/lambda/) + [Amazon Cognito](https://aws.amazon.com/cognito/) + API Gateway — chat UI & secure invoke patterns (`lambda/`, `terraform/`) |
+| **Optional production paths** | [AWS Lambda](https://aws.amazon.com/lambda/) + [Amazon Cognito](https://aws.amazon.com/cognito/) + API Gateway — chat UI & secure invoke (`lambda/`, `terraform/`) |
 | **Application stack** | Python 3.11+ · **LangGraph** · **FastAPI** · **Ragas** |
 
 <p align="left">
@@ -32,32 +80,9 @@ Stop guessing if your retrieval is helping. Run a structured eval loop, ship met
   <img src="https://img.shields.io/badge/LangGraph-111111?style=flat-square" alt="LangGraph" />
 </p>
 
-*Tip: badges are for scanning; the table above is the source of truth for how each AWS piece maps to the repo.*
+*Badges = quick scan; the table is the map from AWS service → this repo.*
 
----
-
-## Why this repo
-
-| You want to… | This gives you… |
-|--------------|-----------------|
-| Compare models or prompts fairly | Repeatable metrics (faithfulness, relevance, correctness) |
-| See retrieval + generation end-to-end | LangGraph workflow: Retrieval → Dev → Evaluator |
-| Run on AWS without reinventing ops | **Bedrock Agent Core** entrypoint, Docker, observability hooks |
-| Keep humans in the loop when scores dip | Optional **HITL** pause in the pipeline |
-
----
-
-## Highlights
-
-- **Multi-agent orchestration** — LangGraph ties retrieval, response generation, and evaluation into one flow.
-- **Dual evaluation** — Classical Ragas metrics plus LLM-as-a-Judge on Amazon Bedrock.
-- **Observable by default** — Structured logging and CloudWatch-friendly metrics.
-- **Agent Core ready** — `agentcore_entry.py` and `Dockerfile.bedrock` for deployment to **AWS Bedrock Agent Core Runtime**.
-- **Extras in-repo** — Web UI (`web_ui/`), Lambda/Cognito patterns, Terraform samples, sitemap QA tooling—pick what you need.
-
----
-
-## Architecture at a glance
+**Architecture diagram** — [ARCHITECTURE.md](ARCHITECTURE.md)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -77,8 +102,6 @@ Stop guessing if your retrieval is helping. Run a structured eval loop, ship met
 └─────────────────────────────────────────────────────────────┘
 ```
 
-**Deep dive:** [ARCHITECTURE.md](ARCHITECTURE.md)
-
 ---
 
 ## Quick start
@@ -92,10 +115,6 @@ cd raglens
 pip install -r requirements.txt
 pip install bedrock-agentcore-starter-toolkit
 ```
-
-**GitHub settings (discovery):** Use repository name **`raglens`** (Settings → General → Repository name) so the URL matches the product. **About** description (one line): *RAGLens — multi-agent RAG evaluation on AWS Bedrock Agent Core: LangGraph, Ragas, S3, CloudWatch.* **Topics:** `rag` `amazon-bedrock` `bedrock-agent-core` `langgraph` `ragas` `aws` `python` `llm-evaluation` `retrieval-augmented-generation`.
-
-If your remote is still named `TestingAgent`, rename the repo on GitHub first, then run `git remote set-url origin https://github.com/MaheshSugathan/raglens.git`.
 
 **Deploy to Agent Core (example):**
 
@@ -115,6 +134,8 @@ agentcore invoke '{"prompt": "What is RAG?"}'
 ```
 
 **Full deployment:** [DEPLOYMENT.md](DEPLOYMENT.md)
+
+> **Repo polish:** description, topics, and social preview → see [.github/DISCOVERY.md](.github/DISCOVERY.md)
 
 ---
 
@@ -247,10 +268,10 @@ aws logs tail "${LOG_GROUP}" \
 
 ## License
 
-MIT
+[MIT](LICENSE)
 
 ---
 
 ## Status
 
-Ready for **Bedrock Agent Core** workflows: agents wired, metrics path in place, and docs for deploy and troubleshooting.
+Pipeline, Agent Core entrypoint, and observability hooks are wired for **Bedrock Agent Core**; see docs for deploy paths and troubleshooting.

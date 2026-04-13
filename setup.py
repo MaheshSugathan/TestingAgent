@@ -11,6 +11,7 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 setup(
     name="raglens",
     version="1.0.0",
+    license="MIT",
     author="RAGLens",
     author_email="team@example.com",
     description="RAGLens — multi-agent RAG evaluation with LangGraph, AWS Bedrock, Ragas, and LLM-as-a-Judge",
