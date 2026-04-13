@@ -86,12 +86,16 @@ Stop guessing if your retrieval is helping. Run a structured eval loop, ship met
 **Prerequisites:** Python 3.11+, Docker 20.10+, AWS CLI, Bedrock / Agent Core access.
 
 ```bash
-git clone https://github.com/MaheshSugathan/TestingAgent.git
-cd TestingAgent
+git clone https://github.com/MaheshSugathan/raglens.git
+cd raglens
 
 pip install -r requirements.txt
 pip install bedrock-agentcore-starter-toolkit
 ```
+
+**GitHub settings (discovery):** Use repository name **`raglens`** (Settings → General → Repository name) so the URL matches the product. **About** description (one line): *RAGLens — multi-agent RAG evaluation on AWS Bedrock Agent Core: LangGraph, Ragas, S3, CloudWatch.* **Topics:** `rag` `amazon-bedrock` `bedrock-agent-core` `langgraph` `ragas` `aws` `python` `llm-evaluation` `retrieval-augmented-generation`.
+
+If your remote is still named `TestingAgent`, rename the repo on GitHub first, then run `git remote set-url origin https://github.com/MaheshSugathan/raglens.git`.
 
 **Deploy to Agent Core (example):**
 
@@ -160,7 +164,7 @@ aws bedrock-agent-runtime invoke-agent-runtime \
 ## Project layout
 
 ```
-TestingAgent/
+raglens/
 ├── agentcore_entry.py          # Bedrock Agent Core entrypoint
 ├── Dockerfile.bedrock          # Container image for Agent Core
 ├── api_server.py               # Optional local FastAPI server

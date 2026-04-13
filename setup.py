@@ -16,7 +16,7 @@ setup(
     description="RAGLens — multi-agent RAG evaluation with LangGraph, AWS Bedrock, Ragas, and LLM-as-a-Judge",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/MaheshSugathan/TestingAgent",
+    url="https://github.com/MaheshSugathan/raglens",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -59,8 +59,8 @@ setup(
     },
     keywords="raglens rag evaluation langchain langgraph aws bedrock ragas llm evaluation",
     project_urls={
-        "Bug Reports": "https://github.com/MaheshSugathan/TestingAgent/issues",
-        "Source": "https://github.com/MaheshSugathan/TestingAgent",
-        "Documentation": "https://github.com/MaheshSugathan/TestingAgent",
+        "Bug Reports": "https://github.com/MaheshSugathan/raglens/issues",
+        "Source": "https://github.com/MaheshSugathan/raglens",
+        "Documentation": "https://github.com/MaheshSugathan/raglens",
     },
 )

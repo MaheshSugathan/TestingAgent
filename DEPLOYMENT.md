@@ -149,7 +149,7 @@ cat output.json
 ## 📁 Project Structure for Deployment
 
 ```
-TestingAgent/
+raglens/
 ├── agentcore_entry.py          # Entry point for Agent Core Runtime
 ├── Dockerfile.bedrock          # Docker image for Agent Core
 ├── requirements.txt            # Python dependencies

@@ -144,7 +144,7 @@ flowchart LR
 
 ## Reference implementation
 
-In this repo (RAGLens / TestingAgent), the flow is implemented as:
+In this repo (RAGLens / `raglens`), the flow is implemented as:
 
 - **Flow diagram & QA approach**: see `SITEMAP_QA_TESTING.md` (flow diagram, sequence diagram, simplified boxes).
 - **Sitemap Q&A Agent**: `agents/sitemap_qa_agent.py` (sitemap fetch, page fetch, BeautifulSoup, Bedrock prompt for Q&A).
